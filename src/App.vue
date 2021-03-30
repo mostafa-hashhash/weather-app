@@ -1,52 +1,69 @@
 <template>
   <div id="app">
 
-    <div>
-      <button> F </button>
-      <button> C </button>
+    <div class="header">
+            
+      <h2>INSTAWEATHER</h2>
+
+      <div class="temp-btn">
+        <button class="cel-btn"> C </button>
+        <button class="feh-btn" autofocus> F </button>
+      </div>
+
     </div>
 
-      {{ city }} <br>
-      {{ summary }} <br>
-      {{ date }} <br>
-      {{ temperature }} <br>
-      {{ lowTemp }} / {{ highTemp }} <br>
-      {{ todaySummary }}
+    <div class="info">
 
+      <div class="basic">
+        <h1> {{city}} </h1>
+        {{ date }} <br>
+        <img v-if="icon == 'clear-day'" src="./assets/sunny.svg">
+        <img v-else-if="icon == 'cloudy'" src="./assets/cloudy.svg">
+        <img v-else src="./assets/night_clear.png" alt="Clear Night" width="65px">
+        <p>{{summary}}</p>
+      </div>
 
-    <div class="daily">
+      <div class="temp">
+        <h1> {{ Math.round(temperature) }} </h1>
+        {{ Math.round(lowTemp) }} / {{ Math.round(highTemp) }} <br>
+        {{ todaySummary }}
+      </div>
 
-      <ul>
-        <li
-          v-for="day in daily_list.data"
-          :key="day.time"
-        >
-          <p>
-            {{ toDay(day.time) }}
-          </p>
-          <img src="./assets/sunny.svg" alt="">
-          <p>
-            {{ Math.round(day.temperatureHigh) }}
-          </p>
-        </li>
-
-      </ul>
     </div>
+      
 
-    <div class="hourly">
+    <div class="forecast">
+      
+      <div class="forecast-btn">
+        <button @click="()=>{isHourly = true}" autofocus>Hourly</button>
+        <button @click="()=>{isHourly = false}">Daily</button>
+      </div>
 
-      <ul>
+      <ul v-if="isHourly">
         <li
           v-for="index in 24"
           :key="index"
         >
-          <p> {{ toHourly(hourly_list.data[index].time) }} </p>
-          <img v-if="hourly_list.data[index].icon == 'clear-day'" src="./assets/sunny.svg">
-          <img v-else src="./assets/cloudy.svg">
-          <p> {{ Math.round(hourly_list.data[index].temperature) }} </p>
+          <p> {{ toHourly(hourly_list.data[index-1].time) }} </p>
+          <img v-if="hourly_list.data[index-1].icon == 'clear-day'" src="./assets/sunny.svg">
+          <img v-else-if="hourly_list.data[index-1].icon == 'cloudy'" src="./assets/cloudy.svg">
+          <img v-else src="./assets/night_clear.png" alt="Clear Night" width="65px">
+          <p> {{ Math.round(hourly_list.data[index-1].temperature) }} </p>
         </li>
-
       </ul>
+
+      <ul v-else>
+        <li
+          v-for="day in daily_list.data"
+          :key="day.time"
+        >
+          <p> {{ toDay(day.time) }} </p>
+          <img v-if=" day.icon == 'clear-day' " src="./assets/sunny.svg" alt="Sunny Day">
+          <img v-else src="./assets/cloudy.svg" alt="Partly Cloudy Day">
+          <p> {{ Math.round(day.temperatureHigh) }} </p>
+        </li>
+      </ul>
+
     </div>
 
   </div>
@@ -87,7 +104,7 @@ export default {
     },
 
     toHourly(time){
-      return new Date(time*1000).toLocaleString('en-us', { minute:"numeric", hour: "numeric" })
+      return new Date(time*1000).toLocaleString('en-us', { minute: "numeric", hour: "numeric" })
     },
 
     toDay(time){
@@ -107,6 +124,7 @@ export default {
           this.city = weatherData.data.timezone.split('/').pop()
 
           this.summary = weatherData.data.currently.summary
+          this.icon = weatherData.data.currently.icon
           this.date = new Date(weatherData.data.currently.time * 1000).toLocaleDateString('en-us',{weekday: "long", day: "numeric", year: "numeric"})
           this.temperature = weatherData.data.currently.temperature
           
@@ -136,48 +154,124 @@ export default {
         this.getWeatherInfo(position.coords.latitude, position.coords.longitude)
       }
     )
-    
 
   }
 }
 </script>
 
 <style>
+
+* {
+  color: white;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  margin-top: 60px;
-}
-
-#app{
   height: 100%;
-  color: white;
-
 }
+
+ul{
+  list-style: none;
+  padding: 0px;
+  border-top: 1px solid rgb(255, 255, 255, 0.3)
+}
+
+ul li {
+  display: inline-block;
+  margin: 12px 15px;
+  text-align: center;
+}
+
+.forecast {
+  overflow: auto ;
+  white-space: nowrap;
+  width: 100%;
+  margin: auto;
+}
+
+button{
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+forecast-btn button:focus {
+  border-bottom: 2px solid;
+}
+
 body {
   height: 100%;
   background: url("./assets/Background.png") center ;
   background-repeat: no-repeat;
   background-size: cover;
-  
-} 
-
-ul{
-  list-style: none;
 }
 
-ul li {
-    display: inline-block;
-    margin: 10px;
-
+.cel-btn {
+  border-right: 1px solid white;
 }
 
-.hourly, .daily {
-  overflow: auto ;
-  white-space: nowrap;
-
-  
+.feh-btn {
+  border-left: 1px solid white;
 }
+
+.temp-btn button:focus{
+  background-color: rgba(248, 247, 216, 0.3);
+}
+
+.temp-btn button {
+  padding: 5px 25px;
+}
+
+.forecast::-webkit-scrollbar {
+  height: 5px;
+}
+
+.forecast::-webkit-scrollbar-track {
+  background: rgba(148, 148, 148, 0.4);
+  border-radius: 5px;
+}
+ 
+.forecast::-webkit-scrollbar-thumb {
+  background: rgb(255, 255, 255); 
+  border-radius: 5px;
+}
+
+.forecast::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.info {
+  padding: 3% 2%; 
+}
+
+.basic {
+  text-align: center;
+  float: left;
+}
+
+.temp{
+  text-align: center;
+  float: right;
+}
+
+.header h2 {
+  display: inline-block;
+  margin: 1% 3%;
+}
+
+.header div {
+  float: right;
+  margin: auto;
+  margin: 10px 5px;
+}
+
+.header{
+  display: inline-block;
+  width: 100%;
+}
+
 </style>
