@@ -41,13 +41,13 @@
           :key="index"
         >
           <p> {{ toHourly(hourly_list.data[index].time) }} </p>
-          <img src="./assets/sunny.svg" alt="">
+          <img v-if="hourly_list.data[index].icon == 'clear-day'" src="./assets/sunny.svg">
+          <img v-else src="./assets/cloudy.svg">
           <p> {{ Math.round(hourly_list.data[index].temperature) }} </p>
         </li>
 
       </ul>
     </div>
-
 
   </div>
 </template>
@@ -60,6 +60,8 @@ export default {
 
   data(){
     return{
+      isHourly: true,
+      isFahrenheit: true,
       errorMsg:"",
       response: "",
       daily_list: "",
@@ -94,15 +96,6 @@ export default {
 
 
     getWeatherInfo(latitude, longitude){
-    // getWeatherInfo(){
-      axios
-      // .get(`http://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${latitude},${longitude}`
-      // ,{
-      //   headers: {
-      //     'Referrer-Policy': 'no-referrer'
-      //   }
-      // }
-      // )
 
       let url = process.env.VUE_APP_mockedURL
       let apiKey = process.env.VUE_APP_API_KEY
