@@ -15,26 +15,26 @@
     <div class="info">
 
       <div class="basic">
-        <h1> {{city}} </h1>
-        {{ date }} <br>
+        <h1 class="city"> {{city}} </h1>
+        <p class="date"><b>{{ date }}</b></p>
         <img v-if="icon == 'clear-day'" src="./assets/sunny.svg">
         <img v-else-if="icon == 'cloudy'" src="./assets/cloudy.svg">
         <img v-else src="./assets/night_clear.png" alt="Clear Night" width="65px">
-        <p>{{summary}}</p>
+        <p class="summary"><b>{{summary}}</b></p>
       </div>
 
       <div class="temp">
-        <h1> {{ adjustTemp(temperature) }} </h1>
-        {{ adjustTemp(lowTemp) }} / {{ adjustTemp(highTemp) }} <br>
-        {{ todaySummary }}
+        <h1 class="current-temp"> {{ adjustTemp(temperature) }} </h1>
+        <p class="high-low-temp">{{ adjustTemp(lowTemp) }} / {{ adjustTemp(highTemp) }}</p>
+        <p class="summary"><b>{{ todaySummary }}</b></p>
       </div>
 
     </div>
       
 
     <div class="forecast-btn">
-      <button @click="()=>{isHourly = true}" autofocus>Hourly</button>
-      <button @click="()=>{isHourly = false}">Daily</button>
+      <button @click="()=>{isHourly = true}" autofocus >Hourly</button>
+      <button @click="()=>{isHourly = false}" class="daily-btn">Daily</button>
     </div>
 
 
@@ -118,7 +118,7 @@ export default {
 
     getWeatherInfo(latitude, longitude){
 
-      let url = process.env.VUE_APP_mockedURL
+      let url = process.env.VUE_APP_apiURL
       let apiKey = process.env.VUE_APP_API_KEY
 
       axios
@@ -176,6 +176,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
+  padding: 1% 4%;
 }
 
 ul{
@@ -258,22 +259,21 @@ body {
 }
 
 .info {
-  padding: 2%; 
+  padding: 1%; 
 }
 
 .basic {
-  text-align: center;
   float: left;
 }
 
 .temp{
-  text-align: center;
+  text-align: right;
   float: right;
 }
 
 .header h2 {
   display: inline-block;
-  margin: 1% 3%;
+  margin: 1% ;
 }
 
 .header div {
@@ -285,6 +285,30 @@ body {
 .header{
   display: inline-block;
   width: 100%;
+}
+
+.city {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+.current-temp {
+  font-size: 70px;
+  margin-bottom: 0px;
+}
+
+.high-low-temp {
+  font-size: 25px;
+  margin: 10px auto ;
+}
+
+.date, .summary {
+  margin-top: 5px;
+  margin-bottom: 25px;
+}
+
+.daily-btn {
+  margin-left: 20px;
 }
 
 </style>
