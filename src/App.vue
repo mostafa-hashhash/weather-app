@@ -18,6 +18,7 @@
         <h1 class="city"> {{city}} </h1>
         <p class="date"><b>{{ date }}</b></p>
         <img v-if="icon == 'clear-day'" src="./assets/sunny.svg">
+        <img v-else-if="icon == 'partly-cloudy-night'" src="./assets/cloudy-night.png" width="65px">
         <img v-else-if="icon == 'cloudy'" src="./assets/cloudy.svg">
         <img v-else src="./assets/night_clear.png" alt="Clear Night" width="65px">
         <p class="summary"><b>{{summary}}</b></p>
@@ -51,6 +52,7 @@
           <p> {{ toHourly(hourly_list.data[index-1].time) }} </p>
           <img v-if="hourly_list.data[index-1].icon == 'clear-day'" src="./assets/sunny.svg">
           <img v-else-if="hourly_list.data[index-1].icon == 'cloudy'" src="./assets/cloudy.svg">
+          <img v-else-if="hourly_list.data[index-1].icon == 'partly-cloudy-night'" src="./assets/cloudy-night.png" width="65px">
           <img v-else src="./assets/night_clear.png" alt="Clear Night" width="65px">
           <p>
             {{ adjustTemp(hourly_list.data[index-1].temperature) }}
@@ -156,8 +158,6 @@ export default {
   },
 
   mounted(){
-
-    if(this.isFeh) console.log("....")
 
     if(!("geolocation" in navigator)){
       this.errorMsg = "Geolocation is not supported"
