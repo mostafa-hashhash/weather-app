@@ -1,4 +1,8 @@
-# robusta-challenge
+## Project Demo
+
+Try it [here](https://mostafa-hashhash.github.io/weather-app/)
+
+![](preview.png)
 
 ## Project setup
 ```
