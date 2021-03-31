@@ -3,7 +3,7 @@
 
     <div class="header">
             
-      <h2>INSTAWEATHER {{msg}}</h2>
+      <h2>INSTAWEATHER</h2>
 
       <div class="temp-btn">
         <button class="cel-btn" @click="()=>{isFeh = false}"> C </button>
@@ -24,8 +24,11 @@
       </div>
 
       <div class="temp">
-        <h1 class="current-temp"> {{ adjustTemp(temperature) }} </h1>
-        <p class="high-low-temp">{{ adjustTemp(lowTemp) }} / {{ adjustTemp(highTemp) }}</p>
+        <h1 class="current-temp"> {{ adjustTemp(temperature) }} <span>&#176;</span> </h1>
+        <p class="high-low-temp">
+          {{ adjustTemp(lowTemp) }}<span>&#176;</span> / 
+          {{ adjustTemp(highTemp) }} <span>&#176;</span>
+        </p>
         <p class="summary"><b>{{ todaySummary }}</b></p>
       </div>
 
@@ -49,7 +52,10 @@
           <img v-if="hourly_list.data[index-1].icon == 'clear-day'" src="./assets/sunny.svg">
           <img v-else-if="hourly_list.data[index-1].icon == 'cloudy'" src="./assets/cloudy.svg">
           <img v-else src="./assets/night_clear.png" alt="Clear Night" width="65px">
-          <p> {{ adjustTemp(hourly_list.data[index-1].temperature) }} </p>
+          <p>
+            {{ adjustTemp(hourly_list.data[index-1].temperature) }}
+            <span>&#176;</span>
+          </p>
         </li>
       </ul>
 
@@ -61,7 +67,10 @@
           <p> {{ toDay(day.time) }} </p>
           <img v-if=" day.icon == 'clear-day' " src="./assets/sunny.svg" alt="Sunny Day">
           <img v-else src="./assets/cloudy.svg" alt="Partly Cloudy Day">
-          <p> {{ adjustTemp(day.temperatureHigh) }} </p>
+          <p>
+            {{ adjustTemp(day.temperatureHigh) }}
+            <span>&#176;</span>
+          </p>
         </li>
       </ul>
 
