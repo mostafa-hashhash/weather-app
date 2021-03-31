@@ -32,12 +32,13 @@
     </div>
       
 
+    <div class="forecast-btn">
+      <button @click="()=>{isHourly = true}" autofocus>Hourly</button>
+      <button @click="()=>{isHourly = false}">Daily</button>
+    </div>
+
+
     <div class="forecast">
-      
-      <div class="forecast-btn">
-        <button @click="()=>{isHourly = true}" autofocus>Hourly</button>
-        <button @click="()=>{isHourly = false}">Daily</button>
-      </div>
 
       <ul v-if="isHourly">
         <li
@@ -106,10 +107,6 @@ export default {
       return Math.round((5/9)*(temp-32))
     },
 
-    toFahrenheit(temp){
-      return Math.round((temp*(9/5))+32)
-    },
-
     toHourly(time){
       return new Date(time*1000).toLocaleString('en-us', { minute: "numeric", hour: "numeric" })
     },
@@ -142,7 +139,6 @@ export default {
           
           this.hourly_list = weatherData.data.hourly
           this.daily_list = weatherData.data.daily
-
 
         }
       )
@@ -198,7 +194,7 @@ ul li {
   overflow: auto ;
   white-space: nowrap;
   width: 100%;
-  margin: auto;
+  margin-top: -10px;
 }
 
 button{
@@ -207,9 +203,16 @@ button{
   outline: none;
   font-size: 20px;
   font-weight: bold;
+  padding-bottom: 4px ;
 }
 
-forecast-btn button:focus {
+.forecast-btn {
+  width: 100%;
+  display: inline-block;
+  margin: 2% 1% -10px 0px;
+}
+
+.forecast-btn button:focus {
   border-bottom: 2px solid;
 }
 
@@ -255,7 +258,7 @@ body {
 }
 
 .info {
-  padding: 3% 2%; 
+  padding: 2%; 
 }
 
 .basic {
