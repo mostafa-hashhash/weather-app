@@ -3,11 +3,11 @@
 
     <div class="header">
             
-      <h2>INSTAWEATHER</h2>
+      <h2>INSTAWEATHER {{msg}}</h2>
 
       <div class="temp-btn">
-        <button class="cel-btn"> C </button>
-        <button class="feh-btn" autofocus> F </button>
+        <button class="cel-btn" @click="()=>{isFeh = false}"> C </button>
+        <button class="feh-btn" autofocus @click="()=>{isFeh = true}"> F </button>
       </div>
 
     </div>
@@ -24,8 +24,8 @@
       </div>
 
       <div class="temp">
-        <h1> {{ Math.round(temperature) }} </h1>
-        {{ Math.round(lowTemp) }} / {{ Math.round(highTemp) }} <br>
+        <h1> {{ adjustTemp(temperature) }} </h1>
+        {{ adjustTemp(lowTemp) }} / {{ adjustTemp(highTemp) }} <br>
         {{ todaySummary }}
       </div>
 
@@ -48,7 +48,7 @@
           <img v-if="hourly_list.data[index-1].icon == 'clear-day'" src="./assets/sunny.svg">
           <img v-else-if="hourly_list.data[index-1].icon == 'cloudy'" src="./assets/cloudy.svg">
           <img v-else src="./assets/night_clear.png" alt="Clear Night" width="65px">
-          <p> {{ Math.round(hourly_list.data[index-1].temperature) }} </p>
+          <p> {{ adjustTemp(hourly_list.data[index-1].temperature) }} </p>
         </li>
       </ul>
 
@@ -60,7 +60,7 @@
           <p> {{ toDay(day.time) }} </p>
           <img v-if=" day.icon == 'clear-day' " src="./assets/sunny.svg" alt="Sunny Day">
           <img v-else src="./assets/cloudy.svg" alt="Partly Cloudy Day">
-          <p> {{ Math.round(day.temperatureHigh) }} </p>
+          <p> {{ adjustTemp(day.temperatureHigh) }} </p>
         </li>
       </ul>
 
@@ -78,7 +78,7 @@ export default {
   data(){
     return{
       isHourly: true,
-      isFahrenheit: true,
+      isFeh: true,
       errorMsg:"",
       response: "",
       daily_list: "",
@@ -95,12 +95,19 @@ export default {
 
   methods:{
 
+    adjustTemp(temp){
+      if(this.isFeh) 
+        return Math.round(temp)
+      else 
+        return this.toCelsius(temp)
+    },
+
     toCelsius(temp){
-      return Math.round((temp*(9/5))+32)
+      return Math.round((5/9)*(temp-32))
     },
 
     toFahrenheit(temp){
-      return Math.round((5/9)*(temp-32))
+      return Math.round((temp*(9/5))+32)
     },
 
     toHourly(time){
@@ -114,8 +121,9 @@ export default {
 
     getWeatherInfo(latitude, longitude){
 
-      let url = process.env.VUE_APP_apiURL
+      let url = process.env.VUE_APP_mockedURL
       let apiKey = process.env.VUE_APP_API_KEY
+
       axios
       .get(`${url}/${apiKey}/${latitude},${longitude}`)
       .then(
@@ -143,6 +151,8 @@ export default {
   },
 
   mounted(){
+
+    if(this.isFeh) console.log("....")
 
     if(!("geolocation" in navigator)){
       this.errorMsg = "Geolocation is not supported"
