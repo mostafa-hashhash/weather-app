@@ -114,7 +114,7 @@ export default {
 
     getWeatherInfo(latitude, longitude){
 
-      let url = process.env.VUE_APP_mockedURL
+      let url = process.env.VUE_APP_apiURL
       let apiKey = process.env.VUE_APP_API_KEY
       axios
       .get(`${url}/${apiKey}/${latitude},${longitude}`)
